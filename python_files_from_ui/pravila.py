@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'ui_files/first.ui'
+# Form implementation generated from reading ui file 'ui_files/pravila.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.0
 #
@@ -35,37 +35,48 @@ class Ui_MainWindow(object):
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setSpacing(30)
         self.verticalLayout.setObjectName("verticalLayout")
-        spacerItem = QtWidgets.QSpacerItem(20, 28, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
+        spacerItem = QtWidgets.QSpacerItem(20, 5, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
         self.verticalLayout.addItem(spacerItem)
         self.label = QtWidgets.QLabel(self.frame_2)
         font = QtGui.QFont()
         font.setFamily("Rockwell")
-        font.setPointSize(28)
+        font.setPointSize(22)
         font.setBold(True)
         font.setItalic(False)
         font.setWeight(75)
         self.label.setFont(font)
         self.label.setStyleSheet("background: pink; ")
         self.label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.label.setWordWrap(True)
         self.label.setObjectName("label")
         self.verticalLayout.addWidget(self.label)
-        self.horizontalLayout = QtWidgets.QHBoxLayout()
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.start = QtWidgets.QPushButton(self.frame_2)
-        self.start.setMinimumSize(QtCore.QSize(300, 50))
-        self.start.setMaximumSize(QtCore.QSize(300, 50))
+        self.label_3 = QtWidgets.QLabel(self.frame_2)
+        self.label_3.setMinimumSize(QtCore.QSize(50, 70))
         font = QtGui.QFont()
         font.setFamily("Rockwell")
-        font.setPointSize(22)
+        font.setPointSize(10)
+        self.label_3.setFont(font)
+        self.label_3.setStyleSheet("background: pink; ")
+        self.label_3.setWordWrap(True)
+        self.label_3.setObjectName("label_3")
+        self.verticalLayout.addWidget(self.label_3)
+        self.horizontalLayout = QtWidgets.QHBoxLayout()
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.pravila = QtWidgets.QPushButton(self.frame_2)
+        self.pravila.setMinimumSize(QtCore.QSize(150, 20))
+        self.pravila.setMaximumSize(QtCore.QSize(300, 20))
+        font = QtGui.QFont()
+        font.setFamily("Rockwell")
+        font.setPointSize(18)
         font.setBold(False)
         font.setItalic(False)
         font.setWeight(50)
-        self.start.setFont(font)
-        self.start.setStyleSheet("background-color: white;")
-        self.start.setObjectName("start")
-        self.horizontalLayout.addWidget(self.start)
+        self.pravila.setFont(font)
+        self.pravila.setStyleSheet("background-color: white;")
+        self.pravila.setObjectName("pravila")
+        self.horizontalLayout.addWidget(self.pravila)
         self.verticalLayout.addLayout(self.horizontalLayout)
-        spacerItem1 = QtWidgets.QSpacerItem(20, 98, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
+        spacerItem1 = QtWidgets.QSpacerItem(20, 5, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
         self.verticalLayout.addItem(spacerItem1)
         self.gridLayout_2.addLayout(self.verticalLayout, 0, 0, 1, 1)
         self.gridLayout_3.addWidget(self.frame_2, 0, 0, 1, 1)
@@ -82,5 +93,13 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.label.setText(_translate("MainWindow", "Быки и коровы"))
-        self.start.setText(_translate("MainWindow", "Погнали"))
+        self.label.setText(_translate("MainWindow", "Добро пожаловать в игру\n"
+" \"Быки и коровы\""))
+        self.label_3.setText(_translate("MainWindow", "Ознакомьтесь с правилами:\n"
+" Цель состоит в том, чтобы угадать случайное четырехзначное целое число. \n"
+" Все цифры в целом уникальны, повторяющихся цифр нет. \n"
+" \"Бык\" – это когда вы угадываете правильную цифру в правильном месте. \n"
+" \"Корова\" - это когда вы угадываете правильную цифру, но не в той позиции. \n"
+" Пример: если секретное число 1234, а вы угадали 4321, у вас будет 0 быков и 4 коровы. \n"
+" Если бы вы угадали число 2134, у вас было бы 2 быка и 2 коровы."))
+        self.pravila.setText(_translate("MainWindow", "Ознакомился"))

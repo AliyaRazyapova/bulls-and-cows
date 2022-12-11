@@ -55,7 +55,7 @@
               <property name="sizeHint" stdset="0">
                <size>
                 <width>20</width>
-                <height>28</height>
+                <height>5</height>
                </size>
               </property>
              </spacer>
@@ -65,7 +65,7 @@
               <property name="font">
                <font>
                 <family>Rockwell</family>
-                <pointsize>28</pointsize>
+                <pointsize>22</pointsize>
                 <weight>75</weight>
                 <italic>false</italic>
                 <bold>true</bold>
@@ -75,33 +75,68 @@
                <string notr="true">background: pink; </string>
               </property>
               <property name="text">
-               <string>Быки и коровы</string>
+               <string>Добро пожаловать в игру
+ &quot;Быки и коровы&quot;</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_3">
+              <property name="minimumSize">
+               <size>
+                <width>50</width>
+                <height>70</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Rockwell</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">background: pink; </string>
+              </property>
+              <property name="text">
+               <string>Ознакомьтесь с правилами:
+ Цель состоит в том, чтобы угадать случайное четырехзначное целое число. 
+ Все цифры в целом уникальны, повторяющихся цифр нет. 
+ &quot;Бык&quot; – это когда вы угадываете правильную цифру в правильном месте. 
+ &quot;Корова&quot; - это когда вы угадываете правильную цифру, но не в той позиции. 
+ Пример: если секретное число 1234, а вы угадали 4321, у вас будет 0 быков и 4 коровы. 
+ Если бы вы угадали число 2134, у вас было бы 2 быка и 2 коровы.</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout">
               <item>
-               <widget class="QPushButton" name="start">
+               <widget class="QPushButton" name="pravila">
                 <property name="minimumSize">
                  <size>
-                  <width>300</width>
-                  <height>50</height>
+                  <width>150</width>
+                  <height>20</height>
                  </size>
                 </property>
                 <property name="maximumSize">
                  <size>
                   <width>300</width>
-                  <height>50</height>
+                  <height>20</height>
                  </size>
                 </property>
                 <property name="font">
                  <font>
                   <family>Rockwell</family>
-                  <pointsize>22</pointsize>
+                  <pointsize>18</pointsize>
                   <weight>50</weight>
                   <italic>false</italic>
                   <bold>false</bold>
@@ -111,7 +146,7 @@
                  <string notr="true">background-color: white;</string>
                 </property>
                 <property name="text">
-                 <string>Погнали</string>
+                 <string>Ознакомился</string>
                 </property>
                </widget>
               </item>
@@ -125,7 +160,7 @@
               <property name="sizeHint" stdset="0">
                <size>
                 <width>20</width>
-                <height>98</height>
+                <height>5</height>
                </size>
               </property>
              </spacer>

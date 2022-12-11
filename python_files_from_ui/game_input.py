@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'ui_files/first.ui'
+# Form implementation generated from reading ui file 'ui_files/game_input.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.0
 #

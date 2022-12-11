@@ -10,6 +10,18 @@
     <height>500</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>500</width>
+    <height>500</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>500</width>
+    <height>500</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
@@ -65,53 +77,122 @@
               <property name="font">
                <font>
                 <family>Rockwell</family>
-                <pointsize>28</pointsize>
-                <weight>75</weight>
+                <pointsize>18</pointsize>
+                <weight>50</weight>
                 <italic>false</italic>
-                <bold>true</bold>
+                <bold>false</bold>
                </font>
               </property>
               <property name="styleSheet">
                <string notr="true">background: pink; </string>
               </property>
               <property name="text">
-               <string>Быки и коровы</string>
+               <string>Введите четырехзначное число, в котором цифры не повторяются</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
               </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout">
+             <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
               <item>
-               <widget class="QPushButton" name="start">
+               <widget class="QLabel" name="labbel_2">
                 <property name="minimumSize">
                  <size>
-                  <width>300</width>
-                  <height>50</height>
+                  <width>100</width>
+                  <height>30</height>
                  </size>
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>300</width>
-                  <height>50</height>
+                  <width>150</width>
+                  <height>30</height>
                  </size>
                 </property>
                 <property name="font">
                  <font>
                   <family>Rockwell</family>
-                  <pointsize>22</pointsize>
+                  <pointsize>16</pointsize>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background: pink;</string>
+                </property>
+                <property name="text">
+                 <string>Ваше число:</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QTextEdit" name="game_input_field">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>250</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>250</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background: #ebebeb;</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout">
+              <item>
+               <widget class="QPushButton" name="game_input_button">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>250</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>250</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <family>Rockwell</family>
+                  <pointsize>18</pointsize>
                   <weight>50</weight>
                   <italic>false</italic>
                   <bold>false</bold>
                  </font>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">background-color: white;</string>
+                 <string notr="true">background-color: #ebebeb;</string>
                 </property>
                 <property name="text">
-                 <string>Погнали</string>
+                 <string>Начать игру</string>
                 </property>
                </widget>
               </item>
