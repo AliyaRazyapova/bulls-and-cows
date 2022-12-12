@@ -73,6 +73,9 @@
              </spacer>
             </item>
             <item>
+             <widget class="QTextBrowser" name="chat"/>
+            </item>
+            <item>
              <widget class="QLabel" name="label">
               <property name="font">
                <font>

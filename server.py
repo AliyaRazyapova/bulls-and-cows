@@ -13,7 +13,7 @@ wait_lock = threading.Lock()
 game_lock = threading.Lock()
 
 host = '127.0.0.1'
-port = 5059
+port = 5046
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((host, port))
@@ -40,9 +40,65 @@ def handle(client):
     exception_connection = (ConnectionResetError, ConnectionAbortedError, ConnectionRefusedError)
 
     while True:
-        if client.fileno == -1:  # Соединение разорвано
-            print(f'Соединение закрыто с клиентом {client}')
+        if client.fileno() == -1:
             return
+
+        if client not in clients:  # Клиент не аутентифицирован
+            with client_init_lock:
+                for c in clients:
+                    if c.fileno == -1:
+                        del clients[c]
+                clients[client] = {'state': 4}
+            try:
+                client.send(f'valid_nickname'.encode('ascii'))
+            except exception_connection:
+                print('Connection torn apart')
+                client.close()
+                del clients[client]
+                return
+
+    #     if clients[client]['state'] == 0:  # Поиск игры
+    #         while True:
+    #             sleep(1)
+    #             with searching_lock:
+    #                 print(free_players)
+    #
+    #                 if client.fileno() == -1:
+    #                     break
+    #                 if client not in clients or clients[client]['state'] != 0:
+    #                     break
+    #
+    #                 for opponent in free_players:  # Подбор свободного соперника
+    #                     if opponent != client:
+    #                         if opponent.fileno() == -1:
+    #                             continue
+    #                         free_players.remove(client)
+    #                         free_players.remove(opponent)
+    #
+    #                         session_info[client] = {'opponent': opponent}
+    #                         session_info[opponent] = {'opponent': client}
+    #
+    #                         clients[client]['state'] = 1
+    #                         clients[opponent]['state'] = 1
+    #
+    #                         try:
+    #                             client.send(f"game {clients[opponent]['nickname']}".encode('ascii'))
+    #                         except conn_exceptions:
+    #                             client.close()
+    #                             print('Connection refused cln')
+    #                             break
+    #
+    #                         try:
+    #                             opponent.send(f"game {clients[client]['nickname']}".encode('ascii'))
+    #                         except conn_exceptions:
+    #                             opponent.close()
+    #                             print('Connection refused opp')
+    #                         break
+    #
+    # while True:
+    #     if client.fileno == -1:  # Соединение разорвано
+    #         print(f'Соединение закрыто с клиентом {client}')
+    #         return
 
         # if client not in clients:  # Клиент не аутентифицирован
         #     client.send('nickname'.encode('ascii'))
@@ -86,50 +142,121 @@ def handle(client):
         #                     clients[client]['state'] = 1
         #                     clients[opponent]['state'] = 1
         #                     break
-
         if clients[client]['state'] == 1:  # Загадывание числа
-            # client.send('guess'.encode('ascii'))
             while True:
-                with code_lock:
-                    if client.fileno == -1 or clients[client]['state'] != 1:
-                        break
-
-                    number = client.recv(1024)
-
-                    # opponent = opponent_valid(client)
-                    # if not isinstance(opponent, socket.socket):
-                    #     break
-
-                    # if 'code' not in session_info[client]:
-                    #     number = client.recv(1024).decode('ascii')
-                    #     if not number:
-                    #         break
-                    #     if not re.match(r'^(?!.*(.).*\1)\d{4}$', number):
-                    #         client.send('invalid'.encode('ascii'))
-                    #         continue
-                    #     client.send('valid'.encode('ascii'))
-                    #
-                    #     session_info[client]['code'] = number
-                    if number is False or number is None:
-                        break
+                opponent = opponent_valid(client)
+                if not isinstance(opponent, socket.socket):
                     try:
-                        number = number.decode('ascii')
-                    except UnicodeDecodeError:
+                        client.send('invalid_opponent'.encode('ascii'))
+                    except exception_connection:
+                        del clients[client]
+                        print('Connection torn apart')
+                        client.close()
+                        return
+                    clients[client]['state'] = 4
+                    break
+
+                if clients[client]['state'] != 1:
+                    break
+
+                try:
+                    number = client.recv(1024)
+                except exception_connection:
+                    print('Connection torn apart')
+                    del clients[client]
+                    client.close()
+                    break
+                print(number)
+                if number is False or number is None:
+                    break
+                try:
+                    number = number.decode('ascii')
+                except UnicodeDecodeError:
+                    try:
                         client.send('invalid_characters'.encode('ascii'))
-                        continue
+                    except exception_connection:
+                        del clients[client]
+                        print('Connection torn apart')
+                        client.close()
+                        return
+                    continue
 
-                    if not number:
+                if not number:
+                    try:
                         client.send('invalid_length'.encode('ascii'))
-                        continue
+                    except exception_connection:
+                        del clients[client]
+                        print('Connection torn apart')
+                        client.close()
+                        return
+                    continue
 
-                    if not re.match(r'^(?!.*(.).*\1)\d{4}$', number):
+                if not re.match(r'^(?!.*(.).*\1)\d{4}$', number):
+                    try:
                         client.send('invalid_code'.encode('ascii'))
-                        continue
+                    except exception_connection:
+                        del clients[client]
+                        print('Connection torn apart')
+                        client.close()
+                        return
+                    continue
 
-                    client.send('valid_wish'.encode('ascii'))
+                try:
+                    client.send(f'valid_wish {number}'.encode('ascii'))
+                    print('ok')
+                except exception_connection:
+                    del clients[client]
+                    print('Connection torn apart')
+                    client.close()
+                    return
 
-                    session_info[client]['code'] = number
-                    clients[client]['state'] = 2
+                session_info[client]['code'] = number
+                clients[client]['state'] = 2
+                print(number)
+
+        # if clients[client]['state'] == 1:  # Загадывание числа
+        #     # client.send('guess'.encode('ascii'))
+        #     while True:
+        #         with code_lock:
+        #             if client.fileno == -1 or clients[client]['state'] != 1:
+        #                 break
+        #
+        #             number = client.recv(1024)
+        #
+        #             # opponent = opponent_valid(client)
+        #             # if not isinstance(opponent, socket.socket):
+        #             #     break
+        #
+        #             # if 'code' not in session_info[client]:
+        #             #     number = client.recv(1024).decode('ascii')
+        #             #     if not number:
+        #             #         break
+        #             #     if not re.match(r'^(?!.*(.).*\1)\d{4}$', number):
+        #             #         client.send('invalid'.encode('ascii'))
+        #             #         continue
+        #             #     client.send('valid'.encode('ascii'))
+        #             #
+        #             #     session_info[client]['code'] = number
+        #             if number is False or number is None:
+        #                 break
+        #             try:
+        #                 number = number.decode('ascii')
+        #             except UnicodeDecodeError:
+        #                 client.send('invalid_characters'.encode('ascii'))
+        #                 continue
+        #
+        #             if not number:
+        #                 client.send('invalid_length'.encode('ascii'))
+        #                 continue
+        #
+        #             if not re.match(r'^(?!.*(.).*\1)\d{4}$', number):
+        #                 client.send('invalid_code'.encode('ascii'))
+        #                 continue
+        #
+        #             client.send('valid_wish'.encode('ascii'))
+        #
+        #             session_info[client]['code'] = number
+        #             clients[client]['state'] = 2
 
         # if clients[client]['state'] == 2:  # Ожидание загадывания числа от опонента и определение первого угадывающего
         #     client.send('wait'.encode('ascii'))
@@ -217,6 +344,9 @@ def receive():
     while True:
         client, address = server.accept()
         print("Connected with {}".format(str(address)))
+        print(clients)
+        # print(clients[client])
+        print('ok')
 
         thread = threading.Thread(target=handle, args=(client,))
         thread.start()
