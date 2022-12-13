@@ -73,6 +73,13 @@
              </spacer>
             </item>
             <item>
+             <widget class="QLabel" name="instructions">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QTextBrowser" name="chat"/>
             </item>
             <item>
@@ -101,7 +108,7 @@
              </widget>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0">
+             <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0">
               <property name="leftMargin">
                <number>0</number>
               </property>
@@ -109,37 +116,29 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QLabel" name="label_2">
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>30</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>150</width>
-                  <height>30</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <family>Rockwell</family>
-                  <pointsize>16</pointsize>
-                 </font>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">background: pink;</string>
+               <widget class="QLineEdit" name="game_input_field"/>
+              </item>
+              <item>
+               <widget class="QPushButton" name="game_input_ok">
+                <property name="enabled">
+                 <bool>false</bool>
                 </property>
                 <property name="text">
-                 <string/>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
+                 <string>ok</string>
                 </property>
                </widget>
               </item>
              </layout>
+            </item>
+            <item>
+             <widget class="QPushButton" name="game_input_button">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
             </item>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout"/>
