@@ -10,13 +10,13 @@ from PyQt6.QtWidgets import QMainWindow, QApplication
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 connection = ('127.0.0.1', 5003)
-
+stylesheet = "#MainWindow{border-image:url(static/background.jpg)}"
 
 class Start(QMainWindow, first.Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.setStyleSheet("#MainWindow{border-image:url(static/game_1.jpg)}")
+        self.setStyleSheet(stylesheet)
 
         self.client = client
         self.client.connect(connection)
@@ -32,7 +32,7 @@ class PravilaWindow(QMainWindow, pravila.Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.setStyleSheet("#MainWindow{border-image:url(static/game_1.jpg)}")
+        self.setStyleSheet(stylesheet)
 
         self.pravila.clicked.connect(self.game)
 
@@ -46,7 +46,7 @@ class Game(QMainWindow, python_files_from_ui.game.Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.setStyleSheet("#MainWindow{border-image:url(static/game_1.jpg)}")
+        self.setStyleSheet(stylesheet)
         self.client = client
 
         self.receive = threading.Thread(target=self.receive)
