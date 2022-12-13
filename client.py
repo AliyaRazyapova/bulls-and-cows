@@ -10,7 +10,7 @@ from python_files_from_ui import first, pravila, game
 from PyQt6.QtWidgets import QMainWindow, QApplication
 
 host = '127.0.0.1'
-port = 5002
+port = 6086
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 connection = (host, port)
@@ -83,7 +83,6 @@ class Game(QMainWindow, python_files_from_ui.game.Ui_MainWindow):
 
         self.client.send(message.encode('ascii'))
         self.game_input_ok.setEnabled(False)
-        self.game_input_button.setEnabled(True)
 
     def on_input_changed(self):
         self.game_input_ok.setEnabled(bool(self.game_input_field.text()))
@@ -109,7 +108,6 @@ class Game(QMainWindow, python_files_from_ui.game.Ui_MainWindow):
 
             if resp == 'invalid_opponent':
                 self.last_response.setText('Соперник покинул игру')
-                self.chat.append(f"Вы технически победили!")
                 self.game_input_field.clear()
                 self.game_input_field.setEnabled(False)
                 self.game_input_ok.setEnabled(False)
@@ -137,7 +135,7 @@ class Game(QMainWindow, python_files_from_ui.game.Ui_MainWindow):
 
             if resp.split()[0] == 'valid_nickname':
                 self.nickname = resp.split()[1]
-                self.label.setText(f'Окно игрока {self.code}')
+                self.label.setText(f'Окно игрока {self.nickname}')
                 self.instructions.setText(f'Теперь можете искать игру')
                 self.game_input_field.clear()
                 self.game_input_field.setEnabled(False)
@@ -201,13 +199,13 @@ class Game(QMainWindow, python_files_from_ui.game.Ui_MainWindow):
                 continue
 
             if resp == 'win':
-                self.last_response.setText('Вы выиграли эту игру!')
-                self.chat.append(f"Вы выиграли!")
+                self.last_response.setText('Вы победили!')
+                self.chat.append(f"Вы победили!")
                 self.game_input_field.clear()
                 self.game_input_field.setEnabled(False)
                 self.game_input_ok.setEnabled(False)
                 self.game_input_button.setEnabled(True)
-                self.instructions.setText("Вы выиграли! Вы можете сыграть ещё раз")
+                self.instructions.setText("Вы победили! Вы можете сыграть ещё раз")
                 self.last_response.setProperty("color", "0")
                 continue
 

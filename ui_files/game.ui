@@ -75,21 +75,21 @@
             <item>
              <widget class="QLabel" name="label">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="minimumSize">
                <size>
                 <width>0</width>
-                <height>20</height>
+                <height>30</height>
                </size>
               </property>
               <property name="font">
                <font>
                 <family>Rockwell</family>
-                <pointsize>18</pointsize>
-                <weight>50</weight>
+                <pointsize>22</pointsize>
+                <weight>75</weight>
                 <italic>false</italic>
-                <bold>false</bold>
+                <bold>true</bold>
                </font>
               </property>
               <property name="styleSheet">
@@ -110,22 +110,46 @@
              <widget class="QLabel" name="instructions">
               <property name="minimumSize">
                <size>
-                <width>0</width>
-                <height>20</height>
+                <width>143</width>
+                <height>30</height>
                </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Rockwell</family>
+                <pointsize>12</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
               </property>
               <property name="styleSheet">
                <string notr="true">background: pink; </string>
               </property>
               <property name="text">
-               <string/>
+               <string>Введите никнейм</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QTextBrowser" name="chat">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Rockwell</family>
+                <pointsize>14</pointsize>
+               </font>
               </property>
              </widget>
             </item>
             <item alignment="Qt::AlignHCenter">
-             <widget class="QTextBrowser" name="chat"/>
-            </item>
-            <item>
              <widget class="QLabel" name="last_response">
               <property name="minimumSize">
                <size>
@@ -133,11 +157,20 @@
                 <height>20</height>
                </size>
               </property>
+              <property name="font">
+               <font>
+                <family>Rockwell</family>
+                <pointsize>14</pointsize>
+               </font>
+              </property>
               <property name="styleSheet">
                <string notr="true">background: pink; </string>
               </property>
               <property name="text">
                <string/>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
               </property>
              </widget>
             </item>
@@ -150,12 +183,30 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QLineEdit" name="game_input_field"/>
+               <widget class="QLineEdit" name="game_input_field">
+                <property name="font">
+                 <font>
+                  <family>Rockwell</family>
+                  <pointsize>16</pointsize>
+                 </font>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
               </item>
               <item>
                <widget class="QPushButton" name="game_input_ok">
                 <property name="enabled">
                  <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <family>Rockwell</family>
+                  <pointsize>16</pointsize>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
                 </property>
                 <property name="text">
                  <string>ok</string>
@@ -175,13 +226,18 @@
                 <height>16777215</height>
                </size>
               </property>
+              <property name="font">
+               <font>
+                <family>Rockwell</family>
+                <pointsize>16</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
               <property name="text">
                <string>Поиск игры</string>
               </property>
              </widget>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout"/>
             </item>
             <item>
              <spacer name="verticalSpacer">

@@ -13,7 +13,7 @@ wait_lock = threading.Lock()
 game_lock = threading.Lock()
 
 host = '127.0.0.1'
-port = 5002
+port = 6086
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((host, port))
@@ -25,14 +25,14 @@ session_info = {}
 
 
 def handle(client):
-    def opponent_valid(client):
-        opponent = session_info[client]['opponent']
-        if opponent.fileno() == -1:
-            clients[client]['state'] = 4
-            del session_info[client]
-            del session_info[opponent]
+    def opponent_valid(cl):
+        op = session_info[cl]['opponent']
+        if op.fileno() == -1:
+            clients[cl]['state'] = 4
+            del session_info[cl]
+            del session_info[op]
             return False
-        return opponent
+        return op
 
     exception_connection = (ConnectionResetError, ConnectionAbortedError, ConnectionRefusedError)
 
@@ -46,6 +46,7 @@ def handle(client):
             except exception_connection:
                 print('Connection torn apart')
                 client.close()
+                del clients[client]
                 return
 
             try:
@@ -56,6 +57,7 @@ def handle(client):
                 except exception_connection:
                     print('Connection torn apart')
                     client.close()
+                    del clients[client]
                     return
                 continue
 
@@ -65,21 +67,23 @@ def handle(client):
                 except exception_connection:
                     print('Connection torn apart')
                     client.close()
+                    del clients[client]
                     return
                 continue
 
             with client_init_lock:
-                for client in clients:
-                    if client.fileno == -1:
-                        del clients[client]
-                        if clients[client]['nickname'] == nickname:
+                for c in clients:
+                    if c.fileno == -1:
+                        del clients[c]
+                        if clients[c]['nickname'] == nickname:
                             break
-                    if clients[client]['code'] == nickname:
+                    if clients[c]['nickname'] == nickname:
                         try:
                             client.send('invalid_taken'.encode('ascii'))
                         except exception_connection:
                             print('Connection torn apart')
                             client.close()
+                            del clients[client]
                             return
                         continue
                 clients[client] = {'nickname': nickname, 'state': 4}
@@ -93,7 +97,7 @@ def handle(client):
 
         if clients[client]['state'] == 0:
             while True:
-                sleep(10)
+                sleep(1)
                 with searching_lock:
                     print('tes', free_players)
                     print('gsfkj', session_info)
@@ -118,24 +122,19 @@ def handle(client):
                             clients[client]['state'] = 1
                             clients[opponent]['state'] = 1
 
-                            # TODO
                             try:
                                 client.send(f"game {clients[opponent]['nickname']}".encode('ascii'))
                             except exception_connection:
                                 client.close()
                                 print('Connection refused cln')
                                 break
-                #
-                #             #TODO
+
                             try:
                                 opponent.send(f"game {clients[client]['nickname']}".encode('ascii'))
                             except exception_connection:
                                 opponent.close()
                                 print('Connection refused opp')
                             break
-
-            # clients[client]['state'] = 1
-                    # clients[opponent]['state'] = 1
 
         elif clients[client]['state'] == 1:  # Загадывание числа
             while True:
@@ -209,7 +208,7 @@ def handle(client):
                 # print(clients)
         elif clients[client]['state'] == 2:
             while True:
-                sleep(10)
+                sleep(1)
                 with wait_lock:
                     if client.fileno() == -1 or clients[client]['state'] != 2:
                         break
@@ -415,5 +414,5 @@ def receive():
         thread.start()
 
 
-os.system('clear')
+# os.system('clear')
 receive()
