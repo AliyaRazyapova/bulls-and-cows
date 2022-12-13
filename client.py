@@ -10,7 +10,7 @@ from python_files_from_ui import first, pravila, game
 from PyQt6.QtWidgets import QMainWindow, QApplication
 
 host = '127.0.0.1'
-port = 6086
+port = 6090
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 connection = (host, port)
@@ -72,12 +72,12 @@ class Game(QMainWindow, python_files_from_ui.game.Ui_MainWindow):
         try:
             message.encode('ascii')
         except UnicodeEncodeError:
-            self.last_response.setText('Используйте текст формата ASCII')
+            self.response.setText('Используйте текст формата ASCII')
             self.game_input_field.setText('')
             return
 
         if self.nickname and not bool(re.match(r'^(?!.*(.).*\1)\d{4}$', message)):
-            self.last_response.setText('Введите 4 уникальные цифры')
+            self.response.setText('Введите 4 уникальные цифры')
             self.game_input_field.setText('')
             return
 
@@ -92,7 +92,7 @@ class Game(QMainWindow, python_files_from_ui.game.Ui_MainWindow):
         self.client.send('search'.encode('ascii'))
         self.game_input_button.setEnabled(False)
         self.instructions.setText('Поиск...')
-        self.last_response.setText('Поиск начался')
+        self.response.setText('Поиск начался')
 
     def closeEvent(self, event):
         self.client.close()
@@ -106,8 +106,8 @@ class Game(QMainWindow, python_files_from_ui.game.Ui_MainWindow):
             except conn_exceptions:
                 return
 
-            if resp == 'invalid_opponent':
-                self.last_response.setText('Соперник покинул игру')
+            if resp == 'opponent_leave':
+                self.response.setText('Соперник покинул игру')
                 self.game_input_field.clear()
                 self.game_input_field.setEnabled(False)
                 self.game_input_ok.setEnabled(False)
@@ -115,25 +115,21 @@ class Game(QMainWindow, python_files_from_ui.game.Ui_MainWindow):
                 self.instructions.setText("Начните поиск игры")
                 continue
 
-            if resp == 'invalid_characters':
-                self.last_response.setText('Используйте латинские символы')
+            if resp == 'latin_characters':
+                self.response.setText('Используйте латинские символы')
                 self.game_input_field.clear()
                 continue
 
-            if resp == 'invalid_taken':
-                self.last_response.setText('Такой никнейм уже существует')
+            if resp == 'repeat_nickname':
+                self.response.setText('Такой никнейм уже существует')
                 self.game_input_field.clear()
                 continue
 
-            if resp == 'invalid_empty':
-                self.last_response.setText('Вы ввели пустое сообщение')
+            if resp == 'four_unique_digits':
+                self.response.setText('Введите 4 уникальные цифры')
                 continue
 
-            if resp == 'invalid_code':
-                self.last_response.setText('Введите 4 уникальные цифры')
-                continue
-
-            if resp.split()[0] == 'valid_nickname':
+            if resp.split()[0] == 'authorized_nickname':
                 self.nickname = resp.split()[1]
                 self.label.setText(f'Окно игрока {self.nickname}')
                 self.instructions.setText(f'Теперь можете искать игру')
@@ -145,25 +141,25 @@ class Game(QMainWindow, python_files_from_ui.game.Ui_MainWindow):
                 self.game_input_field.setValidator(QIntValidator())
                 continue
 
-            if resp.split()[0] == 'valid_wish':
+            if resp.split()[0] == 'authorized_opponennt':
                 code = resp.split()[1]
-                self.last_response.setText(f"Вы ввели число {code}")
+                self.response.setText(f"Вы ввели число {code}")
                 self.chat.append(f"Вы ввели число {code}")
                 self.game_input_field.clear()
                 self.game_input_field.setEnabled(False)
                 self.game_input_ok.setEnabled(False)
                 continue
 
-            if resp == 'first':
-                self.last_response.setText("Вы вводите своё предположение первым")
+            if resp == 'first_move':
+                self.response.setText("Вы вводите своё предположение первым")
                 self.game_input_field.clear()
                 self.game_input_field.setEnabled(True)
                 self.game_input_ok.setEnabled(False)
                 self.game_input_button.setEnabled(False)
                 continue
 
-            if resp == 'second':
-                self.last_response.setText(f"{self.opponent_nick} угадывает первым")
+            if resp == 'second_move':
+                self.response.setText(f"{self.opponent_nick} угадывает первым")
                 self.game_input_field.clear()
                 self.game_input_field.setEnabled(False)
                 self.game_input_ok.setEnabled(False)
@@ -171,51 +167,47 @@ class Game(QMainWindow, python_files_from_ui.game.Ui_MainWindow):
                 continue
 
             if resp.split()[0] == 'game':
-                self.last_response.setText("Загадайте число")
+                self.response.setText("Загадайте число")
                 self.game_input_field.setEnabled(True)
                 self.game_input_ok.setEnabled(False)
                 self.opponent_nick = resp.split()[1]
                 self.instructions.setText(f"{self.nickname} против {self.opponent_nick}")
-                self.last_response.setProperty("color", "0")
                 continue
 
-            if resp.split()[0] == 'lose':
+            if resp == 'queue':
+                self.response.setText("Ваша очередь угадывать")
+                self.game_input_field.setEnabled(True)
+                self.instructions.setText("Введите ваше предположение")
+                continue
+
+            if resp.split()[0] == 'loser':
                 code = resp.split()[1]
-                self.last_response.setText(f'Было загадано: {code}')
+                self.response.setText(f'Было загадано: {code}')
                 self.chat.append(f"{self.opponent_nick} победил")
                 self.game_input_field.clear()
                 self.game_input_field.setEnabled(False)
                 self.game_input_ok.setEnabled(False)
                 self.game_input_button.setEnabled(True)
                 self.instructions.setText("Вы проиграли! Вы можете сыграть ещё раз")
-                self.last_response.setProperty("color", "0")
                 continue
 
-            if resp == 'guess':
-                self.last_response.setText("Ваша очередь угадывать")
-                self.game_input_field.setEnabled(True)
-                self.instructions.setText("Введите ваше предположение")
-                self.last_response.setProperty("color", "1")
-                continue
-
-            if resp == 'win':
-                self.last_response.setText('Вы победили!')
+            if resp == 'winner':
+                self.response.setText('Вы победили!')
                 self.chat.append(f"Вы победили!")
                 self.game_input_field.clear()
                 self.game_input_field.setEnabled(False)
                 self.game_input_ok.setEnabled(False)
                 self.game_input_button.setEnabled(True)
                 self.instructions.setText("Вы победили! Вы можете сыграть ещё раз")
-                self.last_response.setProperty("color", "0")
+                self.response.setProperty("color", "0")
                 continue
 
-            if resp == 'wait':
-                self.last_response.setText(f"Ждём предположение игрока {self.opponent_nick}")
+            if resp == 'expectation':
+                self.response.setText(f"Ждём предположение игрока {self.opponent_nick}")
                 self.game_input_field.clear()
                 self.game_input_field.setEnabled(False)
                 self.game_input_ok.setEnabled(False)
                 self.instructions.setText(f"Ждём предположение игрока {self.opponent_nick}")
-                self.last_response.setProperty("color", "0")
                 continue
 
             if resp == '?':
