@@ -7,10 +7,13 @@ from PyQt6.QtGui import QIntValidator, QTextCursor
 from python_files_from_ui import first, pravila, game
 from PyQt6.QtWidgets import QMainWindow, QApplication
 
+host = '127.0.0.1'
+port = 5003
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-connection = ('127.0.0.1', 5003)
+connection = (host, port)
 stylesheet = "#MainWindow{border-image:url(static/background.jpg)}"
+
 
 class Start(QMainWindow, first.Ui_MainWindow):
     def __init__(self):
