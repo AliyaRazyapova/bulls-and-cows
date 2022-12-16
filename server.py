@@ -1,6 +1,5 @@
 import socket
 import threading
-from time import sleep
 import re
 from random import shuffle
 
@@ -11,7 +10,7 @@ wait_lock = threading.Lock()
 game_lock = threading.Lock()
 
 host = '127.0.0.1'
-port = 6090
+port = 6089
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((host, port))
@@ -42,7 +41,6 @@ def handle(client):
             try:
                 nickname = client.recv(1024)
             except exception_connection:
-                print('Connection torn apart')
                 client.close()
                 del clients[client]
                 return
@@ -53,7 +51,6 @@ def handle(client):
                 try:
                     client.send('latin_characters'.encode('ascii'))
                 except exception_connection:
-                    print('Connection torn apart')
                     client.close()
                     del clients[client]
                     return
@@ -69,7 +66,6 @@ def handle(client):
                         try:
                             client.send('repeat_nickname'.encode('ascii'))
                         except exception_connection:
-                            print('Connection torn apart')
                             client.close()
                             del clients[client]
                             return
@@ -78,7 +74,6 @@ def handle(client):
             try:
                 client.send(f'authorized_nickname {nickname}'.encode('ascii'))
             except exception_connection:
-                print('Connection torn apart')
                 client.close()
                 del clients[client]
                 return
@@ -86,9 +81,6 @@ def handle(client):
         if clients[client]['state'] == 0:
             while True:
                 with searching_lock:
-                    print('tes', free_players)
-                    print('gsfkj', session_info)
-                    print('fkj', clients)
 
                     if client.fileno() == -1:
                         break
@@ -113,14 +105,12 @@ def handle(client):
                                 client.send(f"game {clients[opponent]['nickname']}".encode('ascii'))
                             except exception_connection:
                                 client.close()
-                                print('Connection refused cln')
                                 break
 
                             try:
                                 opponent.send(f"game {clients[client]['nickname']}".encode('ascii'))
                             except exception_connection:
                                 opponent.close()
-                                print('Connection refused opp')
                             break
 
         elif clients[client]['state'] == 1:
@@ -131,7 +121,6 @@ def handle(client):
                         client.send('opponent_leave'.encode('ascii'))
                     except exception_connection:
                         del clients[client]
-                        print('Connection torn apart')
                         client.close()
                         return
                     clients[client]['state'] = 4
@@ -143,7 +132,6 @@ def handle(client):
                 try:
                     number = client.recv(1024)
                 except exception_connection:
-                    print('Connection torn apart')
                     del clients[client]
                     client.close()
                     break
@@ -157,7 +145,6 @@ def handle(client):
                         client.send('latin_characters'.encode('ascii'))
                     except exception_connection:
                         del clients[client]
-                        print('Connection torn apart')
                         client.close()
                         return
                     continue
@@ -167,7 +154,6 @@ def handle(client):
                         client.send('length'.encode('ascii'))
                     except exception_connection:
                         del clients[client]
-                        print('Connection torn apart')
                         client.close()
                         return
                     continue
@@ -177,16 +163,14 @@ def handle(client):
                         client.send('four_unique_digits'.encode('ascii'))
                     except exception_connection:
                         del clients[client]
-                        print('Connection torn apart')
                         client.close()
                         return
                     continue
 
                 try:
-                    client.send(f'authorized_opponennt {number}'.encode('ascii'))
+                    client.send(f'authorized_opponent {number}'.encode('ascii'))
                 except exception_connection:
                     del clients[client]
-                    print('Connection torn apart')
                     client.close()
                     return
 
@@ -231,9 +215,7 @@ def handle(client):
                                 except exception_connection:
                                     del clients[order[1]]
                                     order[1].close()
-                                    print('both conn torn apart')
                                     return
-                                print('first conn torn apart')
                                 continue
                             try:
                                 order[1].send('second_move'.encode('ascii'))
@@ -246,9 +228,7 @@ def handle(client):
                                 except exception_connection:
                                     del clients[order[0]]
                                     order[0].close()
-                                    print('both conn torn apart')
                                     return
-                                print('second conn torn apart')
                         break
 
         elif clients[client]['state'] == 3:
@@ -257,11 +237,9 @@ def handle(client):
                 try:
                     number = client.recv(1024)
                 except exception_connection:
-                    print('Connection torn apart')
                     client.close()
                     opponent.send('opponent_leave'.encode('ascii'))
                     return
-                print(number.decode('ascii'), 3)
                 if number.decode('ascii') == 'search':
                     clients[client]['state'] = 0
                     with searching_lock:
@@ -292,7 +270,6 @@ def handle(client):
                         except exception_connection:
                             del clients[client]
                             client.close()
-                            print('Connection torn apart')
                         continue
 
                     if not number or not re.match(r'^(?!.*(.).*\1)\d{4}$', number):
@@ -301,7 +278,6 @@ def handle(client):
                         except exception_connection:
                             del clients[client]
                             client.close()
-                            print('Connection torn apart')
                         continue
 
                     bull = 0
@@ -324,10 +300,8 @@ def handle(client):
                             clients[opponent]['state'] = 4
                         except exception_connection:
                             del clients[opponent]
-                            print('Both conn torn apart')
                             opponent.close()
                             return
-                        print('client conn torn apart')
                         continue
 
                     if bull == 4:
@@ -377,10 +351,8 @@ def handle(client):
                 message = client.recv(1024).decode('ascii')
             except exception_connection:
                 client.close()
-                print('Connection torn apart')
                 del clients[client]
                 return
-            print(message, 4)
             if not message:
                 break
             if message == 'search':
@@ -392,7 +364,6 @@ def handle(client):
 def receive():
     while True:
         client, address = server.accept()
-        print("Connected with {}".format(str(address)))
 
         thread = threading.Thread(target=handle, args=(client,))
         thread.start()

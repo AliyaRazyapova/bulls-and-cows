@@ -5,12 +5,12 @@ import re
 
 import python_files_from_ui
 
-from PyQt6.QtGui import QIntValidator, QTextCursor
+from PyQt6.QtGui import QIntValidator
 from python_files_from_ui import first, pravila, game
 from PyQt6.QtWidgets import QMainWindow, QApplication
 
 host = '127.0.0.1'
-port = 6090
+port = 6089
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 connection = (host, port)
